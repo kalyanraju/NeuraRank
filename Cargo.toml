@@ -1,0 +1,53 @@
+[package]
+name = "neura_rank_index"
+version = "0.1.0"
+edition = "2021"
+description = "Graph-diffusion vector index: PageRank meets ANN search"
+license = "MIT"
+
+[[bin]]
+name = "benchmark"
+path = "src/main.rs"
+
+[[bin]]
+name = "nri-server"
+path = "src/bin/server.rs"
+required-features = ["server"]
+
+[lib]
+name = "neura_rank_index"
+crate-type = ["cdylib", "rlib"]
+path = "src/lib.rs"
+
+[features]
+default = []
+server = ["dep:axum", "dep:tokio", "dep:serde_json"]
+python = ["dep:pyo3"]
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+bincode = "1"
+rayon = "1"
+
+[dependencies.pyo3]
+version = "0.21"
+features = ["extension-module"]
+optional = true
+
+[dependencies.axum]
+version = "0.7"
+optional = true
+
+[dependencies.tokio]
+version = "1"
+features = ["full"]
+optional = true
+
+[dependencies.serde_json]
+version = "1"
+optional = true
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
